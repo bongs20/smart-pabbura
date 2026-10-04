@@ -1,0 +1,16 @@
+{
+  "name": "Smart-Pabbura System",
+  "short_name": "SmartPabbura",
+  "description": "Solusi Stomatitis Pintar & Terukur",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F0F4FF",
+  "theme_color": "#FF6B35",
+  "icons": [
+    {
+      "src": "/window.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}
