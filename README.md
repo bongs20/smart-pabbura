@@ -1,36 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🏥 Smart-Pabbura System
+> **Solusi Stomatitis Pintar & Terukur — Terapi Turate Denti Lozenges**
 
-## Getting Started
+Smart-Pabbura System adalah platform digital healthcare interaktif berbasis Next.js App Router yang dirancang untuk memantau kesehatan mulut, tingkat nyeri (VAS), keasaman (pH), hidrasi mukosa, serta jadwal dosis tablet hisap Turate Denti Lozenges secara real-time.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 📁 Struktur Folder & File Proyek
+
+```text
+smart-pabbura/
+├── 📁 app/                      # Next.js App Router (Halaman & Navigasi)
+│   ├── 📄 page.tsx              # Beranda / Dashboard Utama
+│   ├── 📁 monitoring/           # Halaman Form Input Monitoring Harian
+│   ├── 📁 dosis/                # Halaman Kontrol & Jadwal Dosis Lozenges
+│   ├── 📁 riwayat/              # Halaman Rekap Riwayat & Cetak Laporan PDF
+│   ├── 📁 edukasi/              # Halaman Artikel & Modul Edukasi Medis
+│   ├── 📁 rekomendasi/          # Halaman Sistem Rekomendasi Terapi
+│   ├── 📁 scan/                 # Halaman Pemindai QR Kemasan Lozenges
+│   ├── 📁 profil/               # Halaman Profil & Pengaturan Suara Klik
+│   ├── 📁 notifikasi/           # Halaman Pusat Pengingat & Notifikasi
+│   ├── 📁 login/                # Halaman Autentikasi Masuk
+│   ├── 📁 register/             # Halaman Pendaftaran Pengguna Baru
+│   ├── 📄 globals.css           # Styling Utama & System Color Palette
+│   └── 📄 layout.tsx            # Root Layout (Sound & Toast Providers)
+│
+├── 📁 components/               # Komponen UI Reusable
+│   ├── 📁 layout/               # Header Desktop, Bottom Nav Mobile, Shell
+│   ├── 📁 ui/                   # SemiGauge, ProgressRing, MouthIllustration, Toast
+│   ├── 📁 charts/               # Grafik Tren Nyeri & Keasaman (Recharts)
+│   └── 📁 providers/            # SoundProvider (Global Click Sound Web Audio API)
+│
+├── 📁 hooks/                    # Custom React Hooks
+│   └── 📄 useClickSound.ts      # Hook Suara Interaksi Klik Global
+│
+├── 📁 lib/                      # Utility Functions & Data Handler
+│   ├── 📄 storage.ts            # Penyimpanan Data Lokal (LocalStorage Engine)
+│   └── 📄 utils.ts              # Helper Format Tanggal & Matematika UI
+│
+├── 📁 public/                   # Asset Statis
+│   ├── 📁 sounds/               # Sound Effects (click.mp3)
+│   └── 📄 mouth-illustration.png# Ilustrasi Anatomi Mulut Digital Presisi
+│
+├── 📁 types/                    # Definisi Type TypeScript
+│   └── 📄 index.ts              # Data Metrics, User, & History Interfaces
+│
+└── 📁 supabase/                 # Schema Database (Opsional)
+    └── 📄 schema.sql            # Tabel Profiles & Monitoring Records
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🎨 System Color Palette
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Primary Navy**: `#102A43` *(Main Heading & Brand Identity)*
+- **Secondary Navy Blue**: `#1F4E79` *(Card Header Gradient)*
+- **Primary Orange**: `#F28C38` *(Action Buttons, CTA, & Highlights)*
+- **Light Orange**: `#FFF1E6` *(Hover & Active State Background)*
+- **Background**: `#F6F8FB` *(Canvas Outer Background)*
+- **Card White**: `#FFFFFF` *(Container Card)*
+- **Medical Blue**: `#2F80B7` *(Indikator pH & Medis)*
+- **Health Green**: `#22B573` *(Indikator Status Sehat)*
+- **Hydration Cyan**: `#29A9C9` *(Indikator Hidrasi Mukosa)*
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## ⚡ Cara Menjalankan Proyek di Lokal
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **Jalankan Development Server**:
+   ```bash
+   npm run dev
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2. **Buka di Browser**:
+   Buka `http://localhost:3000` di browser laptop/HP Anda.
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🚀 Cara Mudah Push ke GitHub
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Jika Anda ingin melakukan update / push kodingan ke GitHub:
+
+```bash
+git add .
+git commit -m "Update Smart-Pabbura System"
+git push origin main
+```
