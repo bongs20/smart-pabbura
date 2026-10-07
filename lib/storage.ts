@@ -457,12 +457,21 @@ export const logoutUser = async (): Promise<void> => {
   localStorage.removeItem(KEYS.authSession);
 };
 
+// Helper to scope storage keys per user
+const getScopedKey = (baseKey: string): string => {
+  if (typeof window === 'undefined') return baseKey;
+  const user = getCurrentUser();
+  if (!user || user.id === 'demo-user') return baseKey;
+  return `${baseKey}_${user.id}`;
+};
+
 // ─── Health Metrics ────────────────────────────────────────────────
 export const getHealthData = (): HealthMetrics => {
   if (typeof window === 'undefined') return defaultHealthMetrics;
-  const stored = localStorage.getItem(KEYS.healthMetrics);
+  const key = getScopedKey(KEYS.healthMetrics);
+  const stored = localStorage.getItem(key);
   if (!stored) {
-    localStorage.setItem(KEYS.healthMetrics, JSON.stringify(defaultHealthMetrics));
+    localStorage.setItem(key, JSON.stringify(defaultHealthMetrics));
     return defaultHealthMetrics;
   }
   return JSON.parse(stored);
@@ -470,31 +479,35 @@ export const getHealthData = (): HealthMetrics => {
 
 export const saveHealthData = (data: Partial<HealthMetrics>): void => {
   if (typeof window === 'undefined') return;
+  const key = getScopedKey(KEYS.healthMetrics);
   const current = getHealthData();
   const updated = { ...current, ...data };
-  localStorage.setItem(KEYS.healthMetrics, JSON.stringify(updated));
+  localStorage.setItem(key, JSON.stringify(updated));
 };
 
 // ─── Pain Records ────────────────────────────────────────────────
 export const getPainRecords = (): PainRecord[] => {
   if (typeof window === 'undefined') return [];
-  const stored = localStorage.getItem(KEYS.painRecords);
+  const key = getScopedKey(KEYS.painRecords);
+  const stored = localStorage.getItem(key);
   return stored ? JSON.parse(stored) : [];
 };
 
 export const savePainRecord = (record: Omit<PainRecord, 'id'>): PainRecord => {
   if (typeof window === 'undefined') return { id: '', ...record };
+  const key = getScopedKey(KEYS.painRecords);
   const records = getPainRecords();
   const newRecord: PainRecord = { id: generateId(), ...record };
   records.unshift(newRecord);
-  localStorage.setItem(KEYS.painRecords, JSON.stringify(records));
+  localStorage.setItem(key, JSON.stringify(records));
   return newRecord;
 };
 
 // ─── Dose Records ────────────────────────────────────────────────
 export const getDoseRecords = (): DoseRecord[] => {
   if (typeof window === 'undefined') return [];
-  const stored = localStorage.getItem(KEYS.doseRecords);
+  const key = getScopedKey(KEYS.doseRecords);
+  const stored = localStorage.getItem(key);
   return stored ? JSON.parse(stored) : [];
 };
 
@@ -506,7 +519,7 @@ export const getTodayDoseRecord = (): DoseRecord => {
   return {
     id: generateId(),
     date: today,
-    dosesCompleted: 2,
+    dosesCompleted: 0,
     dosesTotal: 3,
     times: [],
   };
@@ -514,6 +527,7 @@ export const getTodayDoseRecord = (): DoseRecord => {
 
 export const saveDoseRecord = (record: DoseRecord): void => {
   if (typeof window === 'undefined') return;
+  const key = getScopedKey(KEYS.doseRecords);
   const records = getDoseRecords();
   const idx = records.findIndex((r) => r.date === record.date);
   if (idx >= 0) {
@@ -521,7 +535,7 @@ export const saveDoseRecord = (record: DoseRecord): void => {
   } else {
     records.unshift(record);
   }
-  localStorage.setItem(KEYS.doseRecords, JSON.stringify(records));
+  localStorage.setItem(key, JSON.stringify(records));
 };
 
 export const incrementTodayDose = (): DoseRecord => {
@@ -537,48 +551,59 @@ export const incrementTodayDose = (): DoseRecord => {
 // ─── Ulcer Records ────────────────────────────────────────────────
 export const getUlcerRecords = (): UlcerRecord[] => {
   if (typeof window === 'undefined') return [];
-  const stored = localStorage.getItem(KEYS.ulcerRecords);
+  const key = getScopedKey(KEYS.ulcerRecords);
+  const stored = localStorage.getItem(key);
   return stored ? JSON.parse(stored) : [];
 };
 
 export const saveUlcerRecord = (record: Omit<UlcerRecord, 'id'>): UlcerRecord => {
   if (typeof window === 'undefined') return { id: '', ...record };
+  const key = getScopedKey(KEYS.ulcerRecords);
   const records = getUlcerRecords();
   const newRecord: UlcerRecord = { id: generateId(), ...record };
   records.unshift(newRecord);
-  localStorage.setItem(KEYS.ulcerRecords, JSON.stringify(records));
+  localStorage.setItem(key, JSON.stringify(records));
   return newRecord;
 };
 
 // ─── History Records ────────────────────────────────────────────────
 export const getHistoryRecords = (): HistoryRecord[] => {
   if (typeof window === 'undefined') return [];
-  const stored = localStorage.getItem(KEYS.historyRecords);
+  const key = getScopedKey(KEYS.historyRecords);
+  const stored = localStorage.getItem(key);
   if (!stored) {
-    localStorage.setItem(KEYS.historyRecords, JSON.stringify(defaultHistoryRecords));
-    return defaultHistoryRecords;
+    const user = getCurrentUser();
+    // Only return default demo history records for demo-user
+    if (!user || user.id === 'demo-user') {
+      localStorage.setItem(key, JSON.stringify(defaultHistoryRecords));
+      return defaultHistoryRecords;
+    }
+    return [];
   }
   return JSON.parse(stored);
 };
 
 export const saveHistoryRecord = (record: Omit<HistoryRecord, 'id'>): void => {
   if (typeof window === 'undefined') return;
+  const key = getScopedKey(KEYS.historyRecords);
   const records = getHistoryRecords();
   const newRecord: HistoryRecord = { id: generateId(), ...record };
   records.unshift(newRecord);
-  localStorage.setItem(KEYS.historyRecords, JSON.stringify(records));
+  localStorage.setItem(key, JSON.stringify(records));
 };
 
 // ─── Baseline ────────────────────────────────────────────────
 export const getBaseline = (): BaselineData | null => {
   if (typeof window === 'undefined') return null;
-  const stored = localStorage.getItem(KEYS.baseline);
+  const key = getScopedKey(KEYS.baseline);
+  const stored = localStorage.getItem(key);
   return stored ? JSON.parse(stored) : null;
 };
 
 export const saveBaseline = (data: BaselineData): void => {
   if (typeof window === 'undefined') return;
-  localStorage.setItem(KEYS.baseline, JSON.stringify(data));
+  const key = getScopedKey(KEYS.baseline);
+  localStorage.setItem(key, JSON.stringify(data));
 };
 
 // ─── Default Data ────────────────────────────────────────────────
