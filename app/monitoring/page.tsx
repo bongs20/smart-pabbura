@@ -205,68 +205,31 @@ export default function MonitoringPage() {
           </div>
         </div>
 
-        {/* C. Keasaman (pH) Mulut Card */}
-        <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="w-9 h-9 rounded-xl bg-[#EEF7FC] text-[#2F80B7] flex items-center justify-center font-bold">
-                <Droplets size={18} />
+        {/* C. Hidrasi Mukosa Card (Centered on bottom row between A & B) */}
+        <div className="md:col-span-2 flex justify-center">
+          <div className="w-full md:max-w-md bg-white rounded-3xl p-6 border border-[#E6ECF2] shadow-sm space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-9 h-9 rounded-xl bg-[#E6F7FA] text-[#29A9C9] flex items-center justify-center font-bold">
+                  <SmilePlus size={18} />
+                </div>
+                <div>
+                  <h2 className="text-base font-extrabold text-[#102A43]">C. Hidrasi Mukosa</h2>
+                  <p className="text-xs text-[#66788A]">Kelembapan jaringan mulut</p>
+                </div>
               </div>
-              <div>
-                <h2 className="text-base font-extrabold text-[#102A43]">C. Keasaman (pH) Mulut</h2>
-                <p className="text-xs text-slate-400">Keseimbangan asam-basa rongga mulut</p>
-              </div>
+              <span className="text-lg font-black text-[#29A9C9] bg-[#E6F7FA] px-3 py-1 rounded-xl">
+                {hydration}%
+              </span>
             </div>
-            <span className="text-lg font-black text-[#2F80B7] bg-[#EEF7FC] px-3 py-1 rounded-xl">
-              {ph} / 14
-            </span>
-          </div>
 
-          <div className="flex items-center justify-center py-2">
-            <SemiGauge value={ph} max={14} label="Tingkat pH Saat Ini" color="#2F80B7" size={130} />
-          </div>
-
-          <div className="space-y-1">
-            <div className="flex justify-between text-xs text-slate-500">
-              <span>Asam (&lt; 6.5)</span>
-              <span>Optimal (6.5 - 7.2)</span>
-              <span>Basa (&gt; 7.5)</span>
+            <div className="flex items-center justify-center py-2">
+              <ProgressRing value={hydration} max={100} unit="%" color="#29A9C9" size={90} />
             </div>
-            <input
-              type="range"
-              min="4.0"
-              max="9.0"
-              step="0.1"
-              value={ph}
-              onChange={(e) => setPh(Number(e.target.value))}
-              className="w-full h-2.5 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-[#2F80B7]"
-            />
-          </div>
-        </div>
 
-        {/* D. Hidrasi Mukosa Card */}
-        <div className="bg-white rounded-3xl p-6 border border-[#E6ECF2] shadow-sm space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="w-9 h-9 rounded-xl bg-[#E6F7FA] text-[#29A9C9] flex items-center justify-center font-bold">
-                <SmilePlus size={18} />
-              </div>
-              <div>
-                <h2 className="text-base font-extrabold text-[#102A43]">D. Hidrasi Mukosa</h2>
-                <p className="text-xs text-[#66788A]">Kelembapan jaringan mulut</p>
-              </div>
+            <div className="p-3 rounded-2xl bg-[#E6F7FA]/50 border border-[#29A9C9]/20 text-center text-xs text-[#102A43] font-semibold">
+              Hidrasi mukosa terjaga baik (Optimal 80% - 90%)
             </div>
-            <span className="text-lg font-black text-[#29A9C9] bg-[#E6F7FA] px-3 py-1 rounded-xl">
-              {hydration}%
-            </span>
-          </div>
-
-          <div className="flex items-center justify-center py-2">
-            <ProgressRing value={hydration} max={100} unit="%" color="#29A9C9" size={90} />
-          </div>
-
-          <div className="p-3 rounded-2xl bg-[#E6F7FA]/50 border border-[#29A9C9]/20 text-center text-xs text-[#102A43] font-semibold">
-            Hidrasi mukosa terjaga baik (Optimal 80% - 90%)
           </div>
         </div>
       </div>
@@ -279,7 +242,7 @@ export default function MonitoringPage() {
         <div className="w-full md:w-2/3 space-y-2 text-center md:text-left">
           <h3 className="text-base font-extrabold text-[#102A43]">Simpan Pengukuran Harian</h3>
           <p className="text-xs text-slate-500 leading-relaxed">
-            Menyimpan data pengukuran harian akan memperbarui kurva tren perkembangan pH dan grafik penyembuhan sariawan Anda di menu Riwayat &amp; Analisis.
+            Menyimpan data pengukuran harian akan memperbarui grafik penyembuhan sariawan Anda di menu Riwayat &amp; Analisis.
           </p>
           <button
             onClick={handleSave}

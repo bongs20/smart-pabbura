@@ -158,8 +158,8 @@ export default function HomePage() {
               </span>
             </div>
 
-            {/* Gauges & Radial Progress Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {/* Gauges & Radial Progress Grid (Balanced 2-top 1-center-bottom layout) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <SemiGauge
                 value={vas}
                 max={10}
@@ -167,20 +167,15 @@ export default function HomePage() {
                 subValue="/10"
                 color="#F28C38"
               />
-              <SemiGauge
-                value={ph}
-                max={14}
-                label="Keasaman (pH)"
-                subValue="/14"
-                color="#2F80B7"
-              />
               <div className="flex flex-col items-center justify-center p-3.5 bg-white rounded-2xl border border-[#E6ECF2] shadow-xs">
-                <p className="text-xs font-bold text-[#66788A] mb-2">Kebersihan (pH)</p>
+                <p className="text-xs font-bold text-[#66788A] mb-2">Kebersihan Mulut</p>
                 <ProgressRing value={cleanliness} max={100} unit="%" color="#22B573" size={74} />
               </div>
-              <div className="flex flex-col items-center justify-center p-3.5 bg-white rounded-2xl border border-[#E6ECF2] shadow-xs">
-                <p className="text-xs font-bold text-[#66788A] mb-2">Hidrasi Mukosa</p>
-                <ProgressRing value={hydration} max={100} unit="%" color="#29A9C9" size={74} />
+              <div className="sm:col-span-2 flex justify-center">
+                <div className="w-full sm:max-w-xs flex flex-col items-center justify-center p-3.5 bg-white rounded-2xl border border-[#E6ECF2] shadow-xs">
+                  <p className="text-xs font-bold text-[#66788A] mb-2">Hidrasi Mukosa</p>
+                  <ProgressRing value={hydration} max={100} unit="%" color="#29A9C9" size={74} />
+                </div>
               </div>
             </div>
 
@@ -228,7 +223,7 @@ export default function HomePage() {
             <div className="bg-gradient-to-r from-[#102A43] via-[#1E3A5F] to-[#2F80B7] text-white p-5 -mx-6 -mt-6 mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200/20">
               <div>
                 <h2 className="text-base font-extrabold text-white">Perkembangan Pemulihan</h2>
-                <p className="text-xs text-slate-200">Tren perubahan pH mulut dan tingkat nyeri harian</p>
+                <p className="text-xs text-slate-200">Tren tingkat nyeri harian dan target pemulihan</p>
               </div>
 
               <div className="flex flex-wrap items-center gap-2">
@@ -248,74 +243,22 @@ export default function HomePage() {
                     </button>
                   ))}
                 </div>
-
-                {/* Chart mode toggle */}
-                <div className="flex items-center gap-1 bg-white/10 backdrop-blur-md p-1 rounded-xl border border-white/20">
-                  <button
-                    onClick={() => setChartMode('ph')}
-                    className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
-                      chartMode === 'ph'
-                        ? 'bg-[#F28C38] text-white shadow-xs'
-                        : 'text-slate-200 hover:text-white'
-                    }`}
-                  >
-                    Perubahan pH
-                  </button>
-                  <button
-                    onClick={() => setChartMode('healing')}
-                    className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
-                      chartMode === 'healing'
-                        ? 'bg-[#F28C38] text-white shadow-xs'
-                        : 'text-slate-200 hover:text-white'
-                    }`}
-                  >
-                    Waktu &amp; Nyeri
-                  </button>
-                </div>
               </div>
             </div>
 
             {/* Recharts Container */}
             <div className="h-64 w-full pt-2">
               <ResponsiveContainer width="100%" height="100%">
-                {chartMode === 'ph' ? (
-                  <AreaChart
-                    data={
-                      timeRange === '7d'
-                        ? phTrendData7d
-                        : timeRange === '14d'
-                        ? phTrendData14d
-                        : phTrendData30d
-                    }
-                    margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
-                  >
-                    <defs>
-                      <linearGradient id="phColor" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#F28C38" stopOpacity={0.4} />
-                        <stop offset="95%" stopColor="#F28C38" stopOpacity={0} />
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                    <XAxis dataKey="label" tick={{ fontSize: 11, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                    <YAxis domain={[4, 9]} tick={{ fontSize: 11, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                    <Tooltip
-                      contentStyle={{ backgroundColor: '#102A43', color: '#fff', borderRadius: 12, border: 'none', fontSize: 12 }}
-                      formatter={(val: any) => [`${val} pH`, 'Keasaman']}
-                    />
-                    <Area type="monotone" dataKey="ph" stroke="#F28C38" strokeWidth={3} fillOpacity={1} fill="url(#phColor)" />
-                  </AreaChart>
-                ) : (
-                  <BarChart data={healingBarData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                    <XAxis dataKey="day" tick={{ fontSize: 11, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                    <YAxis tick={{ fontSize: 11, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                    <Tooltip
-                      contentStyle={{ backgroundColor: '#102A43', color: '#fff', borderRadius: 12, border: 'none', fontSize: 12 }}
-                    />
-                    <Bar dataKey="days" name="Tingkat Nyeri/Hari" fill="#F28C38" radius={[6, 6, 0, 0]} />
-                    <Bar dataKey="target" name="Target Turate" fill="#2F80B7" radius={[6, 6, 0, 0]} />
-                  </BarChart>
-                )}
+                <BarChart data={healingBarData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                  <XAxis dataKey="day" tick={{ fontSize: 11, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fontSize: 11, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                  <Tooltip
+                    contentStyle={{ backgroundColor: '#102A43', color: '#fff', borderRadius: 12, border: 'none', fontSize: 12 }}
+                  />
+                  <Bar dataKey="days" name="Tingkat Nyeri/Hari" fill="#F28C38" radius={[6, 6, 0, 0]} />
+                  <Bar dataKey="target" name="Target Turate" fill="#2F80B7" radius={[6, 6, 0, 0]} />
+                </BarChart>
               </ResponsiveContainer>
             </div>
           </div>
@@ -326,17 +269,7 @@ export default function HomePage() {
               <h2 className="text-base font-extrabold text-white">Data Bio-Medis &amp; Lingkungan Mulut</h2>
               <p className="text-xs text-slate-200">Parameter fisik-kimia rongga mulut</p>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <div className="p-4 rounded-2xl bg-[#EEF7FC] border border-blue-100 flex flex-col justify-between space-y-2">
-                <div className="w-9 h-9 rounded-xl bg-white text-[#2F80B7] flex items-center justify-center shadow-xs">
-                  <Droplets size={18} />
-                </div>
-                <div>
-                  <p className="text-[11px] font-bold text-slate-500">pH Mulut</p>
-                  <p className="text-xl font-extrabold text-[#102A43] mt-0.5">{ph}</p>
-                </div>
-              </div>
-
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="p-4 rounded-2xl bg-[#FFF1E6] border border-orange-100 flex flex-col justify-between space-y-2">
                 <div className="w-9 h-9 rounded-xl bg-white text-[#F28C38] flex items-center justify-center shadow-xs">
                   <Activity size={18} />
@@ -359,15 +292,17 @@ export default function HomePage() {
                 </div>
               </div>
 
-              <div className="p-4 rounded-2xl bg-[#FEF3C7]/60 border border-amber-200 flex flex-col justify-between space-y-2">
-                <div className="w-9 h-9 rounded-xl bg-white text-[#D97706] flex items-center justify-center shadow-xs">
-                  <Thermometer size={18} />
-                </div>
-                <div>
-                  <p className="text-[11px] font-bold text-slate-500">Suhu Mulut</p>
-                  <p className="text-xl font-extrabold text-[#102A43] mt-0.5">
-                    {temp} <span className="text-xs font-normal text-slate-500">°C</span>
-                  </p>
+              <div className="sm:col-span-2 flex justify-center">
+                <div className="w-full sm:max-w-xs p-4 rounded-2xl bg-[#FEF3C7]/60 border border-amber-200 flex flex-col justify-between space-y-2">
+                  <div className="w-9 h-9 rounded-xl bg-white text-[#D97706] flex items-center justify-center shadow-xs">
+                    <Thermometer size={18} />
+                  </div>
+                  <div>
+                    <p className="text-[11px] font-bold text-slate-500">Suhu Mulut</p>
+                    <p className="text-xl font-extrabold text-[#102A43] mt-0.5">
+                      {temp} <span className="text-xs font-normal text-slate-500">°C</span>
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>

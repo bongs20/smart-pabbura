@@ -151,16 +151,16 @@ export default function AnalysisHistoryPage() {
             </button>
           </div>
 
-          {/* Line / Area Chart for pH & Recovery Progress */}
+          {/* Line / Area Chart for Pain & Recovery Progress */}
           <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-base font-extrabold text-[#102A43]">Grafik Tren pH &amp; Pemulihan</h2>
-                <p className="text-xs text-slate-500">Perkembangan nilai pH mulut (4.0 - 8.0)</p>
+                <h2 className="text-base font-extrabold text-[#102A43]">Grafik Tren Nyeri &amp; Pemulihan</h2>
+                <p className="text-xs text-slate-500">Penurunan tingkat nyeri VAS harian (0 - 10)</p>
               </div>
               <span className="px-3 py-1 rounded-full bg-[#EAF7EE] text-[#22C55E] text-xs font-bold flex items-center gap-1">
                 <TrendingUp size={14} />
-                <span>Tren Membaik</span>
+                <span>Pemulihan Baik</span>
               </span>
             </div>
 
@@ -168,18 +168,19 @@ export default function AnalysisHistoryPage() {
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={analysisChartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                   <defs>
-                    <linearGradient id="phGradient" x1="0" y1="0" x2="0" y2="1">
+                    <linearGradient id="vasGradient" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="5%" stopColor="#F28C38" stopOpacity={0.4} />
                       <stop offset="95%" stopColor="#F28C38" stopOpacity={0} />
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
                   <XAxis dataKey="date" tick={{ fontSize: 11, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                  <YAxis domain={[4, 9]} tick={{ fontSize: 11, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                  <YAxis domain={[0, 10]} tick={{ fontSize: 11, fill: '#64748B' }} axisLine={false} tickLine={false} />
                   <Tooltip
                     contentStyle={{ backgroundColor: '#102A43', color: '#fff', borderRadius: 12, border: 'none', fontSize: 12 }}
+                    formatter={(val: any) => [`${val}/10`, 'Nyeri (VAS)']}
                   />
-                  <Area type="monotone" dataKey="ph" stroke="#F28C38" strokeWidth={3} fillOpacity={1} fill="url(#phGradient)" />
+                  <Area type="monotone" dataKey="vas" stroke="#F28C38" strokeWidth={3} fillOpacity={1} fill="url(#vasGradient)" />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
@@ -201,8 +202,7 @@ export default function AnalysisHistoryPage() {
                     </span>
                   </div>
                   <div className="space-y-1 text-xs text-slate-600">
-                    <p>Nyeri (VAS): <strong className="text-[#F28C38]">{item.vas}/10</strong></p>
-                    <p>pH Mulut: <strong className="text-[#2F80B7]">{item.ph}</strong></p>
+                    <p>Tingkat Nyeri: <strong className="text-[#F28C38]">{item.vas}/10 (VAS)</strong></p>
                   </div>
                   <span className="text-[11px] font-semibold text-slate-500 pt-1 border-t border-slate-200/60">
                     {item.status}
@@ -244,9 +244,6 @@ export default function AnalysisHistoryPage() {
                   <div className="flex items-center gap-4 text-xs font-bold">
                     <div className="px-3 py-1.5 rounded-xl bg-[#FFF1E6] text-[#F28C38]">
                       Nyeri: {item.vas}/10
-                    </div>
-                    <div className="px-3 py-1.5 rounded-xl bg-[#EEF7FC] text-[#2F80B7]">
-                      pH: {item.ph}
                     </div>
                     <div className="px-3 py-1.5 rounded-xl bg-[#EAF7EE] text-[#22C55E]">
                       Ulser: {item.ulcerSize} cm
@@ -366,17 +363,11 @@ export default function AnalysisHistoryPage() {
                 <h4 className="text-xs font-black text-[#102A43] uppercase tracking-wider mb-2">
                   Summary Parameter Bio-Medis Terakhir:
                 </h4>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
                   <div className="p-3 rounded-2xl bg-[#FFF1E6] border border-orange-200">
                     <span className="text-[10px] font-bold text-slate-500 uppercase block">Nyeri (VAS)</span>
                     <strong className="text-lg font-black text-[#F28C38]">2 / 10</strong>
                     <span className="text-[10px] text-slate-500 block font-semibold">Tingkat Ringan</span>
-                  </div>
-
-                  <div className="p-3 rounded-2xl bg-[#EEF7FC] border border-blue-200">
-                    <span className="text-[10px] font-bold text-slate-500 uppercase block">pH Rongga Mulut</span>
-                    <strong className="text-lg font-black text-[#2F80B7]">7.8</strong>
-                    <span className="text-[10px] text-slate-500 block font-semibold">Netral-Basa (Ideal)</span>
                   </div>
 
                   <div className="p-3 rounded-2xl bg-[#EAF7EE] border border-green-200">
@@ -385,9 +376,9 @@ export default function AnalysisHistoryPage() {
                     <span className="text-[10px] text-slate-500 block font-semibold">Regresi 70%</span>
                   </div>
 
-                  <div className="p-3 rounded-2xl bg-purple-50 border border-purple-200">
+                  <div className="p-3 rounded-2xl bg-[#E6F7FA] border border-[#29A9C9]/30">
                     <span className="text-[10px] font-bold text-slate-500 uppercase block">Hidrasi Mukosa</span>
-                    <strong className="text-lg font-black text-purple-600">82 %</strong>
+                    <strong className="text-lg font-black text-[#29A9C9]">82 %</strong>
                     <span className="text-[10px] text-slate-500 block font-semibold">Optimal</span>
                   </div>
                 </div>
@@ -404,7 +395,6 @@ export default function AnalysisHistoryPage() {
                       <tr className="bg-[#102A43] text-white text-[11px] font-bold">
                         <th className="py-2.5 px-3">Tanggal</th>
                         <th className="py-2.5 px-3">Nyeri (VAS)</th>
-                        <th className="py-2.5 px-3">pH Mulut</th>
                         <th className="py-2.5 px-3">Ukuran Lesi</th>
                         <th className="py-2.5 px-3">Dosis Lozenges</th>
                         <th className="py-2.5 px-3">Catatan Perkembangan</th>
@@ -421,9 +411,6 @@ export default function AnalysisHistoryPage() {
                           <td className="py-2.5 px-3 font-bold text-[#102A43]">{row.date}</td>
                           <td className="py-2.5 px-3">
                             <span className="font-bold text-[#F28C38]">{row.vas}/10</span>
-                          </td>
-                          <td className="py-2.5 px-3">
-                            <span className="font-bold text-[#2F80B7]">{row.ph}</span>
                           </td>
                           <td className="py-2.5 px-3 font-semibold text-[#22C55E]">
                             {row.ulcerSize} cm
@@ -448,7 +435,7 @@ export default function AnalysisHistoryPage() {
                   <span>Catatan Evaluasi Medis Sistem:</span>
                 </h5>
                 <p className="text-slate-600 leading-relaxed text-[11px]">
-                  Berdasarkan pemantauan parameter sensorik rongga mulut, pasien menunjukkan respon terapi positif terhadap pemberian <strong>Turate Denti Lozenges (kandungan flavonoid Carthamus tinctorius L.)</strong>. Nilai pH mulut berada dalam rentang normal dan skala nyeri (VAS) berkurang secara signifikan. Disarankan untuk melanjutkan dosis pemeliharaan serta menjaga hidrasi dan kebersihan rongga mulut.
+                  Berdasarkan pemantauan parameter sensorik rongga mulut, pasien menunjukkan respon terapi positif terhadap pemberian <strong>Turate Denti Lozenges (kandungan flavonoid Carthamus tinctorius L.)</strong>. Skala nyeri (VAS) dan ukuran lesi sariawan berkurang secara signifikan. Disarankan untuk melanjutkan dosis pemeliharaan serta menjaga hidrasi dan kebersihan rongga mulut.
                 </p>
               </div>
 

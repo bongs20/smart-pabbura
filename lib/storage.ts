@@ -88,6 +88,20 @@ export const getCurrentUser = (): AuthUser | null => {
   }
 };
 
+export const saveCurrentUser = (user: AuthUser): void => {
+  if (typeof window === 'undefined') return;
+  localStorage.setItem(KEYS.user, JSON.stringify(user));
+
+  const users = getUsers();
+  const index = users.findIndex((u) => u.id === user.id || u.email.toLowerCase() === user.email.toLowerCase());
+  if (index >= 0) {
+    users[index] = user;
+  } else {
+    users.unshift(user);
+  }
+  localStorage.setItem(KEYS.users, JSON.stringify(users));
+};
+
 export const registerUser = async (
   name: string,
   email: string,
