@@ -8,7 +8,7 @@ import type {
   AuthUser,
   AuthSession,
 } from '@/types';
-import { generateId, getTodayKey, isValidEmail } from './utils';
+import { generateId, getTodayKey, isValidEmail, getURL } from './utils';
 import { getSupabaseClient, isSupabaseConfigured } from './supabase';
 
 const KEYS = {
@@ -142,6 +142,7 @@ export const registerUser = async (
         email: trimmedEmail,
         password: trimmedPassword,
         options: {
+          emailRedirectTo: `${getURL()}dashboard`,
           data: {
             full_name: trimmedName,
           },
@@ -317,10 +318,11 @@ export const loginWithGoogle = async (): Promise<{ success: boolean; message: st
   const supabase = getSupabaseClient();
   if (supabase && isSupabaseConfigured()) {
     try {
+      const redirectTarget = `${getURL()}dashboard`;
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/dashboard`,
+          redirectTo: redirectTarget,
         },
       });
 
@@ -382,7 +384,7 @@ export const forgotPasswordUser = async (
   const supabase = getSupabaseClient();
   if (supabase && isSupabaseConfigured()) {
     try {
-      const redirectUrl = typeof window !== 'undefined' ? `${window.location.origin}/reset-password` : '';
+      const redirectUrl = `${getURL()}reset-password`;
       const { error } = await supabase.auth.resetPasswordForEmail(trimmedEmail, {
         redirectTo: redirectUrl,
       });

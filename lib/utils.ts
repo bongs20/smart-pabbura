@@ -73,3 +73,15 @@ export function getVASLabel(vas: number): string {
 export function generateId(): string {
   return Date.now().toString(36) + Math.random().toString(36).substr(2);
 }
+
+export function getURL(): string {
+  if (typeof window !== 'undefined' && window.location.origin) {
+    return window.location.origin.endsWith('/') ? window.location.origin : `${window.location.origin}/`;
+  }
+  let url =
+    process.env.NEXT_PUBLIC_SITE_URL ??
+    process.env.NEXT_PUBLIC_VERCEL_URL ??
+    'http://localhost:3000/';
+  url = url.includes('http') ? url : `https://${url}`;
+  return url.endsWith('/') ? url : `${url}/`;
+}
