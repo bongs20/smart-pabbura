@@ -309,6 +309,64 @@ export const loginUser = async (
   return { success: true, message: 'Login berhasil.', user: match };
 };
 
+export const loginWithGoogle = async (): Promise<{ success: boolean; message: string }> => {
+  if (typeof window === 'undefined') {
+    return { success: false, message: 'Tidak dapat login di server.' };
+  }
+
+  const supabase = getSupabaseClient();
+  if (supabase && isSupabaseConfigured()) {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/dashboard`,
+        },
+      });
+
+      if (error) {
+        return { success: false, message: error.message || 'Gagal login dengan Google.' };
+      }
+
+      return { success: true, message: 'Mengalihkan ke Google Sign-In...' };
+    } catch (err: any) {
+      return { success: false, message: err?.message || 'Terjadi kesalahan saat mengalihkan ke Google.' };
+    }
+  }
+
+  return {
+    success: false,
+    message: 'Supabase Auth belum siap. Pastikan Google Provider sudah diaktifkan di Dashboard Supabase.',
+  };
+};
+
+export const syncSupabaseSession = async (): Promise<AuthUser | null> => {
+  if (typeof window === 'undefined') return null;
+
+  const supabase = getSupabaseClient();
+  if (!supabase || !isSupabaseConfigured()) return null;
+
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session?.user) {
+      const user = session.user;
+      const profile: AuthUser = {
+        id: user.id,
+        name: user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || 'User Google',
+        email: user.email || '',
+        password: '',
+        status: 'Sehat',
+        createdAt: user.created_at || new Date().toISOString(),
+      };
+      saveCurrentUser(profile);
+      return profile;
+    }
+  } catch {
+    // Ignore error
+  }
+  return null;
+};
+
 export const forgotPasswordUser = async (
   email: string
 ): Promise<{ success: boolean; message: string }> => {

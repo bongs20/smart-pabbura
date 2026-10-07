@@ -32,7 +32,7 @@ import {
 import MouthIllustration from '@/components/ui/MouthIllustration';
 import SemiGauge from '@/components/ui/SemiGauge';
 import ProgressRing from '@/components/ui/ProgressRing';
-import { getHealthData, getTodayDoseRecord, getCurrentUser, incrementTodayDose } from '@/lib/storage';
+import { getHealthData, getTodayDoseRecord, getCurrentUser, incrementTodayDose, syncSupabaseSession } from '@/lib/storage';
 import { formatCountdown } from '@/lib/utils';
 import type { HealthMetrics, DoseRecord } from '@/types';
 import { useToast } from '@/components/ui/Toast';
@@ -88,10 +88,15 @@ export default function HomePage() {
   useEffect(() => {
     setMetrics(getHealthData());
     setDoseInfo(getTodayDoseRecord());
-    const currentUser = getCurrentUser();
-    if (currentUser) {
-      setUserName(currentUser.name || currentUser.email.split('@')[0] || 'Pengguna');
-    }
+    
+    const initUser = async () => {
+      const syncedUser = await syncSupabaseSession();
+      const user = syncedUser || getCurrentUser();
+      if (user) {
+        setUserName(user.name || user.email.split('@')[0] || 'Pengguna');
+      }
+    };
+    initUser();
   }, []);
 
   // Countdown timer for lozenge dose
