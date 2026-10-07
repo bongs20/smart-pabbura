@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Eye, EyeOff, Lock, Mail, ShieldCheck } from 'lucide-react';
-import { loginUser, loginWithGoogle } from '@/lib/storage';
+import { loginUser, loginWithGoogle, syncSupabaseSession, getCurrentUser } from '@/lib/storage';
+import { getSupabaseClient } from '@/lib/supabase';
 import { isValidEmail } from '@/lib/utils';
 
 export default function LoginPage() {
@@ -16,6 +17,28 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+
+  useEffect(() => {
+    const checkAutoRedirect = async () => {
+      const user = await syncSupabaseSession();
+      if (user || getCurrentUser()) {
+        router.replace('/dashboard');
+      }
+    };
+
+    checkAutoRedirect();
+
+    const supabase = getSupabaseClient();
+    if (supabase) {
+      const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+        if (event === 'SIGNED_IN' || session?.user) {
+          await syncSupabaseSession();
+          router.replace('/dashboard');
+        }
+      });
+      return () => subscription.unsubscribe();
+    }
+  }, [router]);
 
   const handleGoogleLogin = async () => {
     setErrorMsg('');

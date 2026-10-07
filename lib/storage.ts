@@ -153,6 +153,12 @@ export const registerUser = async (
         if (authError.message.includes('User already registered')) {
           return { success: false, message: 'Email sudah terdaftar. Silakan login.' };
         }
+        if (authError.message.toLowerCase().includes('rate limit')) {
+          return {
+            success: false,
+            message: 'Batas kirim email verifikasi Supabase telah tercapai (max 3 email/jam). Silakan matikan opsi "Confirm email" di Dashboard Supabase atau gunakan fitur Login Google.',
+          };
+        }
         return { success: false, message: authError.message || 'Registrasi gagal. Silakan coba lagi.' };
       }
 
