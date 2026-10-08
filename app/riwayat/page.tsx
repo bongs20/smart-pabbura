@@ -70,6 +70,19 @@ export default function AnalysisHistoryPage() {
     setUser(getCurrentUser());
   }, []);
 
+  const dynamicTimeline = React.useMemo(() => {
+    if (historyItems.length > 0) {
+      return historyItems.slice(0, 6).map((item) => ({
+        day: item.date,
+        vas: item.vas,
+        ph: item.ph,
+        ulcerSize: `${item.ulcerSize} cm`,
+        status: item.notes || (item.vas <= 3 ? 'Nyeri jauh berkurang' : item.vas <= 5 ? 'Proses penyembuhan' : 'Awal perawatan'),
+      }));
+    }
+    return healingTimeline;
+  }, [historyItems]);
+
   const handleTriggerPrint = () => {
     if (typeof window !== 'undefined') {
       window.print();
@@ -192,7 +205,7 @@ export default function AnalysisHistoryPage() {
           <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm space-y-4">
             <h2 className="text-base font-extrabold text-[#102A43]">Progress Pemulihan Berkelanjutan</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {healingTimeline.map((item) => (
+              {dynamicTimeline.map((item) => (
                 <div
                   key={item.day}
                   className="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex flex-col justify-between space-y-2 hover:bg-[#FFF1E6]/50 transition-colors"
