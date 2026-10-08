@@ -132,11 +132,14 @@ export default function RegisterPage() {
 
           {/* Center Graphic */}
           <div className="relative z-10 my-8 flex flex-col items-center text-center">
-            <div className="w-48 h-48 md:w-60 md:h-60 rounded-3xl bg-white/15 p-5 backdrop-blur-md border border-white/20 flex items-center justify-center shadow-2xl mb-6 group">
+            <div className="w-56 h-56 md:w-64 md:h-64 rounded-3xl bg-white/10 p-2 backdrop-blur-md border border-white/20 shadow-2xl mb-6 overflow-hidden group">
               <img
-                src="/logo-full.png"
-                alt="Logo Smart-Pabbura"
-                className="w-full h-full object-contain filter drop-shadow-2xl transition-transform duration-300 group-hover:scale-105"
+                src="/mouth-illustration.png"
+                alt="Ilustrasi Kesehatan Mulut"
+                className="w-full h-full object-cover rounded-2xl transition-transform duration-300 group-hover:scale-105"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = '/mouth-illustration.jpg';
+                }}
               />
             </div>
             
