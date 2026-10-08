@@ -354,11 +354,16 @@ export default function HomePage() {
             {/* Dose Count & Progress */}
             <div className="space-y-2">
               <div className="flex justify-between text-xs font-bold text-slate-700">
-                <span>Dosis per hari: <strong className="text-[#2F80B7]">3x</strong></span>
-                <span>Dosis hari ini: <strong className="text-[#F28C38]">2 / 3</strong></span>
+                <span>Dosis per hari: <strong className="text-[#2F80B7]">{doseInfo?.dosesTotal ?? 3}x</strong></span>
+                <span>Dosis hari ini: <strong className="text-[#F28C38]">{doseInfo?.dosesCompleted ?? 0} / {doseInfo?.dosesTotal ?? 3}</strong></span>
               </div>
               <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
-                <div className="h-full bg-[#F28C38] rounded-full w-2/3 transition-all duration-500" />
+                <div
+                  className="h-full bg-[#F28C38] rounded-full transition-all duration-500"
+                  style={{
+                    width: `${Math.min(100, Math.round(((doseInfo?.dosesCompleted ?? 0) / (doseInfo?.dosesTotal ?? 3)) * 100))}%`,
+                  }}
+                />
               </div>
             </div>
 

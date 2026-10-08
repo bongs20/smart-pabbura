@@ -468,11 +468,25 @@ const getScopedKey = (baseKey: string): string => {
 // ─── Health Metrics ────────────────────────────────────────────────
 export const getHealthData = (): HealthMetrics => {
   if (typeof window === 'undefined') return defaultHealthMetrics;
+  const user = getCurrentUser();
   const key = getScopedKey(KEYS.healthMetrics);
   const stored = localStorage.getItem(key);
   if (!stored) {
-    localStorage.setItem(key, JSON.stringify(defaultHealthMetrics));
-    return defaultHealthMetrics;
+    if (!user || user.id === 'demo-user') {
+      localStorage.setItem(key, JSON.stringify(defaultHealthMetrics));
+      return defaultHealthMetrics;
+    }
+    const freshMetrics: HealthMetrics = {
+      vas: 0,
+      ph: 7.0,
+      cleanliness: 100,
+      hydration: 100,
+      flavonoidIntake: 0,
+      oralTemperature: 36.6,
+      date: getTodayKey(),
+    };
+    localStorage.setItem(key, JSON.stringify(freshMetrics));
+    return freshMetrics;
   }
   return JSON.parse(stored);
 };
