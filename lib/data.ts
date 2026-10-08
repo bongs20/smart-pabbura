@@ -1,4 +1,5 @@
 import type { EducationArticle, Notification, ChartDataPoint } from '@/types';
+import { getRecentDateLabels } from './utils';
 
 export const LABELS_HERO = [
   { label: 'Stomatitis Aftosa', color: '#FF6B35', bg: '#FFF0EB' },
@@ -13,15 +14,16 @@ export const demoUser = {
   status: 'Sehat' as const,
 };
 
+const recent8 = getRecentDateLabels(8);
 export const phChartData: ChartDataPoint[] = [
-  { label: '18 Mei', value: 5.8 },
-  { label: '19 Mei', value: 6.0 },
-  { label: '20 Mei', value: 6.2 },
-  { label: '21 Mei', value: 6.1 },
-  { label: '22 Mei', value: 6.5 },
-  { label: '23 Mei', value: 6.7 },
-  { label: '24 Mei', value: 6.6 },
-  { label: '28 Mei', value: 6.8 },
+  { label: recent8[0], value: 5.8 },
+  { label: recent8[1], value: 6.0 },
+  { label: recent8[2], value: 6.2 },
+  { label: recent8[3], value: 6.1 },
+  { label: recent8[4], value: 6.5 },
+  { label: recent8[5], value: 6.7 },
+  { label: recent8[6], value: 6.6 },
+  { label: recent8[7], value: 6.8 },
 ];
 
 export const healingProgressData: ChartDataPoint[] = [
@@ -33,20 +35,21 @@ export const healingProgressData: ChartDataPoint[] = [
   { label: 'Hari 14', value: 2, secondary: 2 },
 ];
 
+const recent5 = getRecentDateLabels(5);
 export const painProgressData: ChartDataPoint[] = [
-  { label: '24 Mei', value: 7 },
-  { label: '25 Mei', value: 6 },
-  { label: '26 Mei', value: 5 },
-  { label: '27 Mei', value: 4 },
-  { label: '28 Mei', value: 3 },
+  { label: recent5[0], value: 7 },
+  { label: recent5[1], value: 6 },
+  { label: recent5[2], value: 5 },
+  { label: recent5[3], value: 4 },
+  { label: recent5[4], value: 3 },
 ];
 
 export const ulcerSizeData: ChartDataPoint[] = [
-  { label: '24 Mei', value: 1.2 },
-  { label: '25 Mei', value: 1.0 },
-  { label: '26 Mei', value: 0.8 },
-  { label: '27 Mei', value: 0.7 },
-  { label: '28 Mei', value: 0.5 },
+  { label: recent5[0], value: 1.2 },
+  { label: recent5[1], value: 1.0 },
+  { label: recent5[2], value: 0.8 },
+  { label: recent5[3], value: 0.7 },
+  { label: recent5[4], value: 0.5 },
 ];
 
 export const notifications: Notification[] = [

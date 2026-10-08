@@ -628,13 +628,19 @@ export const defaultHealthMetrics: HealthMetrics = {
   hydration: 82,
   flavonoidIntake: 15,
   oralTemperature: 36.9,
-  date: '2024-05-28',
+  date: new Date().toISOString().split('T')[0],
+};
+
+const getRecentDateString = (offsetDays: number): string => {
+  const d = new Date();
+  d.setDate(d.getDate() - offsetDays);
+  return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
 };
 
 export const defaultHistoryRecords: HistoryRecord[] = [
-  { id: '1', date: '28 Mei 2024', vas: 3, ulcerSize: 0.5, ph: 6.8, doses: '2/3', notes: 'Kondisi stabil' },
-  { id: '2', date: '27 Mei 2024', vas: 4, ulcerSize: 0.7, ph: 6.5, doses: '3/3', notes: 'Sedikit nyeri' },
-  { id: '3', date: '26 Mei 2024', vas: 5, ulcerSize: 0.8, ph: 6.3, doses: '3/3', notes: '' },
-  { id: '4', date: '25 Mei 2024', vas: 6, ulcerSize: 1.0, ph: 6.1, doses: '2/3', notes: 'Nyeri sedang' },
-  { id: '5', date: '24 Mei 2024', vas: 7, ulcerSize: 1.2, ph: 5.9, doses: '3/3', notes: '' },
+  { id: '1', date: getRecentDateString(0), vas: 3, ulcerSize: 0.5, ph: 6.8, doses: '2/3', notes: 'Kondisi stabil' },
+  { id: '2', date: getRecentDateString(1), vas: 4, ulcerSize: 0.7, ph: 6.5, doses: '3/3', notes: 'Sedikit nyeri' },
+  { id: '3', date: getRecentDateString(2), vas: 5, ulcerSize: 0.8, ph: 6.3, doses: '3/3', notes: '' },
+  { id: '4', date: getRecentDateString(3), vas: 6, ulcerSize: 1.0, ph: 6.1, doses: '2/3', notes: 'Nyeri sedang' },
+  { id: '5', date: getRecentDateString(4), vas: 7, ulcerSize: 1.2, ph: 5.9, doses: '3/3', notes: '' },
 ];

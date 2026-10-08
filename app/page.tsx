@@ -33,37 +33,40 @@ import MouthIllustration from '@/components/ui/MouthIllustration';
 import SemiGauge from '@/components/ui/SemiGauge';
 import ProgressRing from '@/components/ui/ProgressRing';
 import { getHealthData, getTodayDoseRecord, getCurrentUser, incrementTodayDose, syncSupabaseSession } from '@/lib/storage';
-import { formatCountdown } from '@/lib/utils';
+import { formatCountdown, getRecentDateLabels } from '@/lib/utils';
 import type { HealthMetrics, DoseRecord } from '@/types';
 import { useToast } from '@/components/ui/Toast';
 
-// Mock chart data for pH changes over dates
+// Dynamic chart data for pH changes over dates ending today
+const dates7d = getRecentDateLabels(7);
 const phTrendData7d = [
-  { label: '22 Mei', ph: 6.0, vas: 4 },
-  { label: '23 Mei', ph: 6.8, vas: 3 },
-  { label: '24 Mei', ph: 7.0, vas: 3 },
-  { label: '25 Mei', ph: 7.2, vas: 2 },
-  { label: '26 Mei', ph: 7.4, vas: 2 },
-  { label: '27 Mei', ph: 7.6, vas: 1 },
-  { label: '28 Mei', ph: 7.8, vas: 1 },
+  { label: dates7d[0], ph: 6.0, vas: 4 },
+  { label: dates7d[1], ph: 6.8, vas: 3 },
+  { label: dates7d[2], ph: 7.0, vas: 3 },
+  { label: dates7d[3], ph: 7.2, vas: 2 },
+  { label: dates7d[4], ph: 7.4, vas: 2 },
+  { label: dates7d[5], ph: 7.6, vas: 1 },
+  { label: dates7d[6], ph: 7.8, vas: 1 },
 ];
 
+const dates14d = getRecentDateLabels(7);
 const phTrendData14d = [
-  { label: '15 Mei', ph: 4.8, vas: 9 },
-  { label: '17 Mei', ph: 5.2, vas: 8 },
-  { label: '19 Mei', ph: 5.8, vas: 6 },
-  { label: '21 Mei', ph: 6.2, vas: 5 },
-  { label: '23 Mei', ph: 6.8, vas: 3 },
-  { label: '25 Mei', ph: 7.2, vas: 2 },
-  { label: '28 Mei', ph: 7.8, vas: 1 },
+  { label: dates14d[0], ph: 4.8, vas: 9 },
+  { label: dates14d[1], ph: 5.2, vas: 8 },
+  { label: dates14d[2], ph: 5.8, vas: 6 },
+  { label: dates14d[3], ph: 6.2, vas: 5 },
+  { label: dates14d[4], ph: 6.8, vas: 3 },
+  { label: dates14d[5], ph: 7.2, vas: 2 },
+  { label: dates14d[6], ph: 7.8, vas: 1 },
 ];
 
+const dates30d = getRecentDateLabels(5);
 const phTrendData30d = [
-  { label: '1 Mei', ph: 4.2, vas: 10 },
-  { label: '7 Mei', ph: 4.9, vas: 8 },
-  { label: '14 Mei', ph: 5.5, vas: 7 },
-  { label: '21 Mei', ph: 6.2, vas: 5 },
-  { label: '28 Mei', ph: 7.8, vas: 1 },
+  { label: dates30d[0], ph: 4.2, vas: 10 },
+  { label: dates30d[1], ph: 4.9, vas: 8 },
+  { label: dates30d[2], ph: 5.5, vas: 7 },
+  { label: dates30d[3], ph: 6.2, vas: 5 },
+  { label: dates30d[4], ph: 7.8, vas: 1 },
 ];
 
 const healingBarData = [

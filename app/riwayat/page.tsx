@@ -28,17 +28,19 @@ import {
   CartesianGrid,
 } from 'recharts';
 import { getHistoryRecords, getCurrentUser } from '@/lib/storage';
+import { getRecentDateLabels } from '@/lib/utils';
 import type { HistoryRecord, AuthUser } from '@/types';
 
-// Mock chart data for analysis tab
+// Dynamic chart data for analysis tab
+const recentDates = getRecentDateLabels(7);
 const analysisChartData = [
-  { date: '18 Mei', ph: 5.0, vas: 8, ulcerSize: 1.8 },
-  { date: '19 Mei', ph: 5.5, vas: 7, ulcerSize: 1.6 },
-  { date: '20 Mei', ph: 6.5, vas: 6, ulcerSize: 1.4 },
-  { date: '21 Mei', ph: 5.8, vas: 5, ulcerSize: 1.2 },
-  { date: '22 Mei', ph: 6.0, vas: 4, ulcerSize: 1.0 },
-  { date: '23 Mei', ph: 6.8, vas: 3, ulcerSize: 0.8 },
-  { date: '28 Mei', ph: 7.8, vas: 2, ulcerSize: 0.5 },
+  { date: recentDates[0], ph: 5.0, vas: 8, ulcerSize: 1.8 },
+  { date: recentDates[1], ph: 5.5, vas: 7, ulcerSize: 1.6 },
+  { date: recentDates[2], ph: 6.5, vas: 6, ulcerSize: 1.4 },
+  { date: recentDates[3], ph: 5.8, vas: 5, ulcerSize: 1.2 },
+  { date: recentDates[4], ph: 6.0, vas: 4, ulcerSize: 1.0 },
+  { date: recentDates[5], ph: 6.8, vas: 3, ulcerSize: 0.8 },
+  { date: recentDates[6], ph: 7.8, vas: 2, ulcerSize: 0.5 },
 ];
 
 const healingTimeline = [

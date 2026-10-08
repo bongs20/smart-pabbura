@@ -85,3 +85,15 @@ export function getURL(): string {
   url = url.includes('http') ? url : `https://${url}`;
   return url.endsWith('/') ? url : `${url}/`;
 }
+
+// Generate N recent date labels ending today (e.g. ['2 Okt', '3 Okt', ..., '8 Okt'])
+export function getRecentDateLabels(days: number): string[] {
+  const result: string[] = [];
+  const today = new Date();
+  for (let i = days - 1; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(d.getDate() - i);
+    result.push(d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }));
+  }
+  return result;
+}
