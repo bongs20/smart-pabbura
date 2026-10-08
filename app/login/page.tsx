@@ -115,7 +115,7 @@ export default function LoginPage() {
 
           {/* Center Graphic & Tagline */}
           <div className="relative z-10 my-8 flex flex-col items-center text-center">
-            <div className="w-56 h-56 md:w-64 md:h-64 rounded-3xl bg-white/10 p-2 backdrop-blur-md border border-white/20 shadow-2xl mb-6 overflow-hidden group">
+            <div className="w-full max-w-xs md:max-w-sm aspect-[3/2] rounded-3xl bg-white/10 p-2 backdrop-blur-md border border-white/20 shadow-2xl mb-6 overflow-hidden group">
               <img
                 src="/mouth-illustration.png"
                 alt="Ilustrasi Kesehatan Mulut"
