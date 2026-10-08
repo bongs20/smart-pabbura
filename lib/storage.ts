@@ -266,28 +266,22 @@ export const loginUser = async (
       });
 
       if (authError || !authData.user) {
-        return { success: false, message: 'Email atau password tidak sesuai.' };
+        return { success: false, message: authError?.message || 'Email atau password tidak sesuai.' };
       }
 
-      // Fetch user profile from database
-      const { data: profileData } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('user_id', authData.user.id)
-        .maybeSingle();
-
-      const fullName = profileData?.full_name || authData.user.user_metadata?.full_name || authData.user.email?.split('@')[0] || 'Pengguna';
+      const user = authData.user;
+      const fullName = user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || 'Pengguna';
 
       const profile: AuthUser = {
-        id: authData.user.id,
+        id: user.id,
         name: fullName,
-        email: authData.user.email || trimmedEmail,
+        email: user.email || trimmedEmail,
         password: '',
         status: 'Sehat',
-        createdAt: profileData?.created_at || new Date().toISOString(),
+        createdAt: user.created_at || new Date().toISOString(),
       };
 
-      localStorage.setItem(KEYS.user, JSON.stringify(profile));
+      saveCurrentUser(profile);
       localStorage.setItem(
         KEYS.authSession,
         JSON.stringify({ userId: profile.id, loggedInAt: new Date().toISOString() })
