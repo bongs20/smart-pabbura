@@ -100,6 +100,13 @@ export const saveCurrentUser = (user: AuthUser): void => {
     users.unshift(user);
   }
   localStorage.setItem(KEYS.users, JSON.stringify(users));
+
+  const supabase = getSupabaseClient();
+  if (supabase && isSupabaseConfigured()) {
+    supabase.auth.updateUser({
+      data: { full_name: user.name, name: user.name }
+    }).catch(() => {});
+  }
 };
 
 export const registerUser = async (
@@ -352,15 +359,24 @@ export const syncSupabaseSession = async (): Promise<AuthUser | null> => {
     const { data: { session } } = await supabase.auth.getSession();
     if (session?.user) {
       const user = session.user;
+      const existingUser = getCurrentUser();
+
+      // Prefer locally saved name if user edited profile, otherwise fallback to session metadata/email
+      const resolvedName =
+        (existingUser && (existingUser.id === user.id || existingUser.email === user.email) && existingUser.name)
+          ? existingUser.name
+          : (user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || 'Pengguna');
+
       const profile: AuthUser = {
         id: user.id,
-        name: user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || 'User Google',
-        email: user.email || '',
-        password: '',
-        status: 'Sehat',
-        createdAt: user.created_at || new Date().toISOString(),
+        name: resolvedName,
+        email: user.email || existingUser?.email || '',
+        password: existingUser?.password || '',
+        status: existingUser?.status || 'Sehat',
+        createdAt: user.created_at || existingUser?.createdAt || new Date().toISOString(),
       };
-      saveCurrentUser(profile);
+      
+      localStorage.setItem(KEYS.user, JSON.stringify(profile));
       return profile;
     }
   } catch {
