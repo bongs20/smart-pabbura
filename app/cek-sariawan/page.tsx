@@ -273,12 +273,12 @@ export default function CekSariawanPage() {
                         </div>
                         <div className="space-y-1">
                           <div className="flex items-center gap-2 flex-wrap">
-                            <span className="font-black text-sm md:text-base text-[#102A43]">{item.title}</span>
-                            <span className={`text-[10px] font-extrabold px-2.5 py-0.5 rounded-full ${item.badgeColor}`}>
+                            <span className="font-normal text-sm md:text-base text-[#102A43]">{item.title}</span>
+                            <span className={`text-[10px] font-semibold px-2.5 py-0.5 rounded-full ${item.badgeColor}`}>
                               {item.badge}
                             </span>
                           </div>
-                          <p className="text-xs text-slate-500 leading-relaxed font-medium">{item.sub}</p>
+                          <p className="text-xs text-slate-500 leading-relaxed font-normal">{item.sub}</p>
                         </div>
                       </div>
                       <div
@@ -333,13 +333,13 @@ export default function CekSariawanPage() {
                     >
                       <div className="flex items-center gap-3">
                         <div
-                          className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 font-bold text-xs ${
+                          className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 text-xs ${
                             checked ? 'bg-[#F28C38] text-white' : 'bg-slate-100 text-slate-500'
                           }`}
                         >
                           📍
                         </div>
-                        <span className="font-extrabold text-sm md:text-base text-[#102A43]">{loc}</span>
+                        <span className="font-normal text-sm md:text-base text-[#102A43]">{loc}</span>
                       </div>
                       <div
                         className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center shrink-0 transition-all ${
@@ -389,12 +389,12 @@ export default function CekSariawanPage() {
                     >
                       <div className="space-y-1">
                         <div className="flex items-center gap-2">
-                          <span className="font-black text-sm md:text-base text-[#102A43]">{item.title}</span>
-                          <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700">
+                          <span className="font-normal text-sm md:text-base text-[#102A43]">{item.title}</span>
+                          <span className="text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700">
                             {item.countLabel}
                           </span>
                         </div>
-                        <p className="text-xs text-slate-500 font-medium">{item.sub}</p>
+                        <p className="text-xs text-slate-500 font-normal">{item.sub}</p>
                       </div>
                       <div
                         className={`w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${
@@ -464,12 +464,12 @@ export default function CekSariawanPage() {
                     >
                       <div className="space-y-1.5 pr-2">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <span className="font-black text-sm md:text-base text-[#102A43]">{item.title}</span>
-                          <span className={`text-[10px] font-black px-2.5 py-0.5 rounded-full shadow-xs ${item.color}`}>
+                          <span className="font-normal text-sm md:text-base text-[#102A43]">{item.title}</span>
+                          <span className={`text-[10px] font-semibold px-2.5 py-0.5 rounded-full shadow-xs ${item.color}`}>
                             {item.badge}
                           </span>
                         </div>
-                        <p className="text-xs text-slate-500 font-medium leading-relaxed">{item.sub}</p>
+                        <p className="text-xs text-slate-500 font-normal leading-relaxed">{item.sub}</p>
                       </div>
                       <div
                         className={`w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${
@@ -521,8 +521,8 @@ export default function CekSariawanPage() {
                       }`}
                     >
                       <div className="space-y-1">
-                        <span className="font-extrabold text-sm md:text-base text-[#102A43] block">{item.text}</span>
-                        <span className="text-[10px] font-bold text-slate-400">{item.tag}</span>
+                        <span className="font-normal text-sm md:text-base text-[#102A43] block">{item.text}</span>
+                        <span className="text-[10px] font-semibold text-slate-400">{item.tag}</span>
                       </div>
                       <div
                         className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center shrink-0 transition-all ${
