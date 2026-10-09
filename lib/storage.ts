@@ -192,21 +192,20 @@ export const registerUser = async (
         );
 
         const sessionEstablished = Boolean(authData.session);
-        if (sessionEstablished) {
-          localStorage.setItem(KEYS.user, JSON.stringify(profile));
-          localStorage.setItem(
-            KEYS.authSession,
-            JSON.stringify({ userId: profile.id, loggedInAt: new Date().toISOString() })
-          );
-        }
+        // Always save user profile to localStorage so user can log in seamlessly
+        saveCurrentUser(profile);
+        localStorage.setItem(
+          KEYS.authSession,
+          JSON.stringify({ userId: profile.id, loggedInAt: new Date().toISOString() })
+        );
 
         return {
           success: true,
           message: sessionEstablished
             ? 'Registrasi berhasil. Selamat datang!'
-            : 'Registrasi berhasil. Silakan cek email Anda untuk verifikasi.',
+            : 'Registrasi berhasil. Silakan login ke akun Anda.',
           user: profile,
-          requiresVerification: !sessionEstablished,
+          requiresVerification: false,
         };
       }
     } catch {
@@ -264,6 +263,7 @@ export const loginUser = async (
     return { success: false, message: 'Password wajib diisi.' };
   }
 
+  // 1. Try Supabase Login if configured
   const supabase = getSupabaseClient();
   if (supabase && isSupabaseConfigured()) {
     try {
@@ -272,49 +272,59 @@ export const loginUser = async (
         password: trimmedPassword,
       });
 
-      if (authError || !authData.user) {
-        return { success: false, message: authError?.message || 'Email atau password tidak sesuai.' };
+      if (!authError && authData.user) {
+        const user = authData.user;
+        const fullName = user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || 'Pengguna';
+
+        const profile: AuthUser = {
+          id: user.id,
+          name: fullName,
+          email: user.email || trimmedEmail,
+          password: '',
+          status: 'Sehat',
+          createdAt: user.created_at || new Date().toISOString(),
+        };
+
+        saveCurrentUser(profile);
+        localStorage.setItem(
+          KEYS.authSession,
+          JSON.stringify({ userId: profile.id, loggedInAt: new Date().toISOString() })
+        );
+
+        return { success: true, message: 'Login berhasil.', user: profile };
       }
-
-      const user = authData.user;
-      const fullName = user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || 'Pengguna';
-
-      const profile: AuthUser = {
-        id: user.id,
-        name: fullName,
-        email: user.email || trimmedEmail,
-        password: '',
-        status: 'Sehat',
-        createdAt: user.created_at || new Date().toISOString(),
-      };
-
-      saveCurrentUser(profile);
-      localStorage.setItem(
-        KEYS.authSession,
-        JSON.stringify({ userId: profile.id, loggedInAt: new Date().toISOString() })
-      );
-
-      return { success: true, message: 'Login berhasil.', user: profile };
     } catch {
       // Fallback to local mode
     }
   }
 
+  // 2. Fallback to local registered users list
   const users = getUsers();
   const match = users.find(
     (user) => user.email.toLowerCase() === trimmedEmail && user.password === trimmedPassword
   );
 
-  if (!match) {
-    return { success: false, message: 'Email atau password tidak sesuai.' };
+  if (match) {
+    saveCurrentUser(match);
+    localStorage.setItem(
+      KEYS.authSession,
+      JSON.stringify({ userId: match.id, loggedInAt: new Date().toISOString() })
+    );
+    return { success: true, message: 'Login berhasil.', user: match };
   }
 
-  localStorage.setItem(KEYS.user, JSON.stringify(match));
-  localStorage.setItem(
-    KEYS.authSession,
-    JSON.stringify({ userId: match.id, loggedInAt: new Date().toISOString() })
-  );
-  return { success: true, message: 'Login berhasil.', user: match };
+  // 3. Demo User Fallback check
+  if (trimmedEmail === 'demo@smartpabbura.com' && trimmedPassword === '123456') {
+    const demoUser = ensureDemoUser();
+    saveCurrentUser(demoUser);
+    localStorage.setItem(
+      KEYS.authSession,
+      JSON.stringify({ userId: demoUser.id, loggedInAt: new Date().toISOString() })
+    );
+    return { success: true, message: 'Login berhasil.', user: demoUser };
+  }
+
+  return { success: false, message: 'Email atau password tidak sesuai.' };
 };
 
 export const loginWithGoogle = async (): Promise<{ success: boolean; message: string }> => {

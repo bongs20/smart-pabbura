@@ -15,23 +15,9 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     let isMounted = true;
 
-    const verifyAuth = async () => {
+    const verifyAuth = () => {
       const isAuthPage = AUTH_ROUTES.some((route) => pathname.startsWith(route));
-      let currentUser = getCurrentUser();
-
-      // Check Supabase session if configured
-      const supabase = getSupabaseClient();
-      if (supabase && isSupabaseConfigured()) {
-        try {
-          const { data: { session } } = await supabase.auth.getSession();
-          if (!session && currentUser && currentUser.id !== 'demo-user') {
-            // session expired in Supabase
-            currentUser = null;
-          }
-        } catch {
-          // ignore session fetch errors
-        }
-      }
+      const currentUser = getCurrentUser();
 
       if (!isMounted) return;
 
