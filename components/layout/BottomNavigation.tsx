@@ -2,13 +2,13 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, BarChart2, BookOpen, User, Plus } from 'lucide-react';
+import { Home, BarChart2, BookOpen, User, QrCode } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
   { href: '/', label: 'Beranda', icon: Home },
   { href: '/riwayat', altHref: '/analysis', label: 'Riwayat', icon: BarChart2 },
-  { href: '/monitoring', label: 'Monitoring', icon: Plus, isCenter: true },
+  { href: '/scan', label: 'Scan QR', icon: QrCode, isCenter: true },
   { href: '/edukasi', altHref: '/education', label: 'Edukasi', icon: BookOpen },
   { href: '/profil', altHref: '/profile', label: 'Profil', icon: User },
 ];
@@ -34,10 +34,10 @@ export default function BottomNavigation() {
               <div key={href} className="flex justify-center -mt-5">
                 <Link
                   href={href}
-                  className="w-13 h-13 w-12 h-12 rounded-full bg-[#F28C38] text-white flex flex-col items-center justify-center shadow-lg shadow-orange-500/30 hover:bg-[#E57B27] active:scale-95 transition-all"
-                  aria-label={label}
+                  className="w-13 h-13 rounded-full bg-gradient-to-tr from-[#F28C38] to-[#FF9F43] text-white flex flex-col items-center justify-center shadow-lg shadow-orange-500/35 hover:scale-105 active:scale-95 transition-all border-4 border-white"
+                  aria-label="Scan QR & Kamera"
                 >
-                  <Plus size={24} strokeWidth={2.5} />
+                  <QrCode size={24} strokeWidth={2.3} />
                 </Link>
               </div>
             );
