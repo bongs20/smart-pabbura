@@ -49,6 +49,7 @@ export default function ConditionalShell({ children }: { children: React.ReactNo
 
   const navLinks = [
     { href: '/', altHref: '/dashboard', label: 'Beranda' },
+    { href: '/cek-sariawan', label: 'Cek Sariawan' },
     { href: '/monitoring', label: 'Monitoring' },
     { href: '/dosis', altHref: '/lozenges', label: 'Dosis' },
     { href: '/riwayat', altHref: '/analysis', label: 'Riwayat' },

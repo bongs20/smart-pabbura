@@ -136,7 +136,14 @@ export default function HomePage() {
               Pantau kesehatan mulut Anda secara lebih teratur dan terukur dengan terapi Turate Denti Lozenges.
             </p>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
+            <Link
+              href="/cek-sariawan"
+              className="px-5 py-3 rounded-2xl bg-white text-[#102A43] font-black text-sm shadow-md flex items-center gap-2 transition-all hover:scale-105 active:scale-95 border border-white/20"
+            >
+              <Stethoscope size={18} className="text-[#F28C38]" />
+              <span>Ada Sariawan Baru</span>
+            </Link>
             <Link
               href="/scan"
               className="px-5 py-3 rounded-2xl bg-[#F28C38] hover:bg-[#E57B27] text-white font-bold text-sm shadow-md shadow-orange-500/30 flex items-center gap-2 transition-all hover:scale-105 active:scale-95"
