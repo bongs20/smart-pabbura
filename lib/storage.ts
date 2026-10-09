@@ -516,12 +516,28 @@ export const logoutUser = async (): Promise<void> => {
   localStorage.removeItem(KEYS.authSession);
 };
 
-// Helper to scope storage keys per user
+// Helper to scope storage keys per user (scoped by email so Google Sign-In and manual login share the exact same data)
 const getScopedKey = (baseKey: string): string => {
   if (typeof window === 'undefined') return baseKey;
   const user = getCurrentUser();
-  if (!user || user.id === 'demo-user') return baseKey;
-  return `${baseKey}_${user.id}`;
+  if (!user || user.id === 'demo-user' || !user.email) return baseKey;
+  
+  const emailKey = user.email.toLowerCase().trim().replace(/[^a-z0-9]/g, '_');
+  const newKey = `${baseKey}_${emailKey}`;
+  const oldKey = `${baseKey}_${user.id}`;
+
+  // Auto-migrate legacy ID-scoped data to email-scoped data if present
+  try {
+    const newStored = localStorage.getItem(newKey);
+    const oldStored = localStorage.getItem(oldKey);
+    if (!newStored && oldStored) {
+      localStorage.setItem(newKey, oldStored);
+    }
+  } catch {
+    // Ignore localStorage errors
+  }
+
+  return newKey;
 };
 
 // ─── Health Metrics ────────────────────────────────────────────────
