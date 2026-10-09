@@ -80,7 +80,7 @@ export default function LoginPage() {
         return;
       }
 
-      router.replace('/dashboard');
+      window.location.href = '/dashboard';
     } catch {
       setErrorMsg('Terjadi kesalahan pada sistem. Silakan coba lagi.');
       setLoading(false);

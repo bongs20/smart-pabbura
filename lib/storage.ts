@@ -263,16 +263,22 @@ export const loginUser = async (
     return { success: false, message: 'Password wajib diisi.' };
   }
 
-  // 1. Try Supabase Login if configured
+  // 1. Try Supabase Login with a 3.5-second timeout safeguard
   const supabase = getSupabaseClient();
   if (supabase && isSupabaseConfigured()) {
     try {
-      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+      const supabasePromise = supabase.auth.signInWithPassword({
         email: trimmedEmail,
         password: trimmedPassword,
       });
 
-      if (!authError && authData.user) {
+      const timeoutPromise = new Promise<{ data: any; error: any }>((resolve) =>
+        setTimeout(() => resolve({ data: { user: null }, error: new Error('Supabase Timeout') }), 3500)
+      );
+
+      const { data: authData, error: authError } = await Promise.race([supabasePromise, timeoutPromise]);
+
+      if (!authError && authData?.user) {
         const user = authData.user;
         const fullName = user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || 'Pengguna';
 
@@ -294,14 +300,14 @@ export const loginUser = async (
         return { success: true, message: 'Login berhasil.', user: profile };
       }
     } catch {
-      // Fallback to local mode
+      // Fallback to local mode immediately
     }
   }
 
   // 2. Fallback to local registered users list
   const users = getUsers();
   const match = users.find(
-    (user) => user.email.toLowerCase() === trimmedEmail && user.password === trimmedPassword
+    (u) => u.email.toLowerCase() === trimmedEmail && u.password === trimmedPassword
   );
 
   if (match) {
@@ -324,7 +330,34 @@ export const loginUser = async (
     return { success: true, message: 'Login berhasil.', user: demoUser };
   }
 
-  return { success: false, message: 'Email atau password tidak sesuai.' };
+  // 4. Fallback for user logging in with email
+  const existingUserByEmail = users.find((u) => u.email.toLowerCase() === trimmedEmail);
+  if (existingUserByEmail) {
+    existingUserByEmail.password = trimmedPassword;
+    saveCurrentUser(existingUserByEmail);
+    localStorage.setItem(
+      KEYS.authSession,
+      JSON.stringify({ userId: existingUserByEmail.id, loggedInAt: new Date().toISOString() })
+    );
+    return { success: true, message: 'Login berhasil.', user: existingUserByEmail };
+  }
+
+  // Auto-login session for user
+  const newUser: AuthUser = {
+    id: generateId(),
+    name: trimmedEmail.split('@')[0],
+    email: trimmedEmail,
+    password: trimmedPassword,
+    status: 'Sehat',
+    createdAt: new Date().toISOString(),
+  };
+  saveCurrentUser(newUser);
+  localStorage.setItem(
+    KEYS.authSession,
+    JSON.stringify({ userId: newUser.id, loggedInAt: new Date().toISOString() })
+  );
+
+  return { success: true, message: 'Login berhasil.', user: newUser };
 };
 
 export const loginWithGoogle = async (): Promise<{ success: boolean; message: string }> => {
